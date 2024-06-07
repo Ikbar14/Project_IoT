@@ -13,8 +13,11 @@ class DeviceController extends Controller
      * Display a listing of the resource.
      */
     public function index()
+
     {
-        return Device::all();
+        
+           return Device::all();
+       
     }
 
     /**

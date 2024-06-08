@@ -26,6 +26,8 @@ Route::get('/device/{id}', [DeviceController::class, 'show']);
 Route::put('/device/{id}', [DeviceController::class, 'update']);
 Route::delete('/device/{id}', [DeviceController::class, 'destroy']);
 
+Route::apiResource('device', DeviceController::class);
+
 Route::get('/log', [LogController::class, 'index']);
 Route::post('/log', [LogController::class, 'store']);
 Route::get('/log/{id}', [LogController::class, 'show']);

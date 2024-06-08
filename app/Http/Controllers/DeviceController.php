@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Device;
 use Illuminate\Http\Request;
-
 use PhpMqtt\Client\Facades\MQTT;
 
 class DeviceController extends Controller
@@ -12,12 +11,17 @@ class DeviceController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
-
+    public function index(Request $request)
     {
+        // Cek apakah ada parameter device_name dalam request
+        if ($request->has('device_name')) {
+            // Filter berdasarkan device_name
+            $deviceName = $request->input('device_name');
+            return Device::where('device_name', $deviceName)->get();
+        }
         
-           return Device::all();
-       
+        // Jika tidak ada parameter device_name, kembalikan semua perangkat
+        return Device::all();
     }
 
     /**
@@ -42,8 +46,6 @@ class DeviceController extends Controller
 
         $mqtt = MQTT::connection();
         $mqtt->publish('device/sensor', json_encode($data));
-
-
 
         return response()->json(["message" => "Device updated."], 201);
     }
@@ -71,8 +73,6 @@ class DeviceController extends Controller
             $device->device_name = $request->input('device_name', $device->device_name);
             $device->device_type = $request->input('device_type', $device->device_type);
             $device->save();
-
-
 
             return response()->json(["message" => "Device updated."], 201);
         } else {

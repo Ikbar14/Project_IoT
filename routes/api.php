@@ -34,6 +34,7 @@ Route::get('/log/{id}', [LogController::class, 'show']);
 Route::put('/log/{id}', [LogController::class, 'update']);
 Route::delete('/log/{id}', [LogController::class, 'destroy']);
 
+
 Route::get('/rule', [RuleController::class, 'index']);
 Route::post('/rule', [RuleController::class, 'store']);
 Route::get('/rule/{id}', [RuleController::class, 'show']);

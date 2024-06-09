@@ -12,12 +12,20 @@ use PhpMqtt\Client\Facades\MQTT;
 
 class LogController extends Controller
 {
-     /**
+    /**
      * Display a listin of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        return Log::all();
+        $device_id = $request->device_id;
+        $data = Log::orderBy("id", "desc");
+        if ($device_id) {
+            $data = $data->where("device_id", $device_id);
+        }
+        $datas = $data->get();
+        return response()->json($datas);
+        // return Data::all();
+
     }
 
     /**
@@ -41,22 +49,20 @@ class LogController extends Controller
         $datalog->save();
 
         $data = [
-        'device_id' => $request->device_id,
-        'value' => $request->value,
-        'max_value' => $request->max_value,
-        'min_value' => $request->min_value,
+            'device_id' => $request->device_id,
+            'value' => $request->value,
+            'max_value' => $request->max_value,
+            'min_value' => $request->min_value,
         ];
 
         $mqtt = MQTT::connection();
         $mqtt->publish('log/value', json_encode($data));
 
-        if(Device::where('id', $request->device_id)->exists()){
+        if (Device::where('id', $request->device_id)->exists()) {
             $device = Device::find($request->device_id);
             $device->save();
         }
         return response()->json(["message" => "Log Added."], 201);
-
-
     }
 
     // /**
@@ -64,7 +70,7 @@ class LogController extends Controller
     //  */
     public function show(string $id)
     {
-        return Log::where('device_id', $id)->orderby('created_at', 'DESC')->get();
+        return Log::find($id);
     }
 
     // /**
@@ -100,5 +106,4 @@ class LogController extends Controller
         $datalog->delete();
         return response()->json(["message" => "Log deleted."], 201);
     }
-
 }

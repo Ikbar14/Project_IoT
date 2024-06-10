@@ -106,4 +106,5 @@ class LogController extends Controller
         $datalog->delete();
         return response()->json(["message" => "Log deleted."], 201);
     }
+    
 }

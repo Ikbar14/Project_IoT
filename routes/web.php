@@ -28,17 +28,14 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
 });
-Route::get('/device', function(){
-    return view('device');
+Route::get('/employeelist', function(){
+    return view('employeelist');
 });
-Route::get('/log', function(){
-    return view('log');
+Route::get('/employeeedit', function(){
+    return view('employeeedit');
 });
-Route::get('/rule', function(){
-    return view('rule');
-});
-Route::get('/monitoring', function(){
-    return view('monitoring');
+Route::get('/employeedetail', function(){
+    return view('employeedetail');
 });
 
 

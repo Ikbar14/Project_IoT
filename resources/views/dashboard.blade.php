@@ -100,14 +100,18 @@
                         <div class="col-lg-8">
                             <div class="d-flex flex-column h-100">
                                 <p class="mb-1 pt-2 text-bold">Built by Ikbar Hafidh</p>
-                                <h5 class="font-weight-bolder">Green House Based with IoT</h5>
+                                <h5 class="font-weight-bolder">Profil PT ARKATAMA</h5>
                                 <p class="mb-5">
-                                    Rumah kaca atau "greenhouse" adalah struktur yang dirancang untuk menumbuhkan tanaman dalam lingkungan terkendali.
-                                    Ia memanfaatkan sinar matahari yang menembus melalui dinding transparan untuk menghangatkan interior, memungkinkan tanaman tumbuh
-                                    optimal meski di luar kondisi kurang mendukung. Teknologi canggih seperti sensor suhu, kelembaban, dan pencahayaan sering diterapkan
-                                    untuk mengoptimalkan kondisi pertumbuhan tanaman di dalamnya.
+                                    PT. Arkatama Multi Solusindo adalah perusahaan penyedia jasa teknologi
+                                    informasi yang inovatif dan kreatif, dengan kegiatan utamanya membantu
+                                    organisasi untuk meningkatkan pelayanan publik anda. Beberapa pelayanan yang
+                                    disediakan oleh PT Arkatama Multi Solusindo adalah pengembangan software,
+                                    pengadaan dan konfigurasi infrastruktur teknologi informasi (hardware), optimasi
+                                    dan automasi proses bisnis, dan jasa pelatihan skill di bidang teknologi informasi
+                                    yang dikhususkan untuk para developer, engineer, user, maupun manager pada
+                                    proyek teknologi informasi.
                                 </p>
-                                <a class="text-body text-sm font-weight-bold mb-0 icon-move-right mt-auto" href="https://id.wikipedia.org/wiki/Rumah_kaca">
+                                <a class="text-body text-sm font-weight-bold mb-0 icon-move-right mt-auto" href="https://arkatama.id/">
                                     Read More
                                     <i class="fas fa-arrow-right text-sm ms-1" aria-hidden="true"></i>
                                 </a>
@@ -117,7 +121,7 @@
                             <div class="position-relative">
                                 <img src="/assets/img/shapes/waves-white.svg" class="position-absolute h-100 w-50 top-0 d-lg-block d-none" alt="waves">
                                 <div class="position-relative d-flex align-items-center justify-content-center h-100">
-                                    <img class="w-100 position-relative z-index-2 pt-4" src="/assets/img/background2.jpg" alt="greenhouse">
+                                    <img class="w-100 position-relative z-index-2 pt-4" src="/assets/img/arkatama.jpeg" alt="greenhouse">
                                 </div>
                             </div>
                         </div>
@@ -129,45 +133,45 @@
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const deviceIds = {
-        temperature: 1,
-        humidity: 3,
-        moisture: 4,
-        intensity: 2
-    };
+    document.addEventListener('DOMContentLoaded', function() {
+        const deviceIds = {
+            temperature: 1,
+            humidity: 3,
+            moisture: 4,
+            intensity: 2
+        };
 
-    const elements = {
-        temperature: 'temperature-value',
-        humidity: 'humidity-value',
-        moisture: 'moisture-value',
-        intensity: 'intensity-value'
-    };
+        const elements = {
+            temperature: 'temperature-value',
+            humidity: 'humidity-value',
+            moisture: 'moisture-value',
+            intensity: 'intensity-value'
+        };
 
-    function fetchData(sensorType) {
-        const deviceId = deviceIds[sensorType];
-        const endpoint = `/api/log/${deviceId}`;
+        function fetchData(sensorType) {
+            const deviceId = deviceIds[sensorType];
+            const endpoint = `/api/log/${deviceId}`;
 
-        fetch(endpoint)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (data.message) {
-                    throw new Error(data.message);
-                }
-                document.getElementById(elements[sensorType]).textContent = data.value;
-            })
-            .catch(error => {
-                console.error(`Error fetching data for ${sensorType}:`, error);
-                document.getElementById(elements[sensorType]).textContent = 'Error';
-            });
-    }
+            fetch(endpoint)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.message) {
+                        throw new Error(data.message);
+                    }
+                    document.getElementById(elements[sensorType]).textContent = data.value;
+                })
+                .catch(error => {
+                    console.error(`Error fetching data for ${sensorType}:`, error);
+                    document.getElementById(elements[sensorType]).textContent = 'Error';
+                });
+        }
 
-    ['temperature', 'humidity', 'moisture', 'intensity'].forEach(fetchData);
-});
+        ['temperature', 'humidity', 'moisture', 'intensity'].forEach(fetchData);
+    });
 </script>
 @endsection

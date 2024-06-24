@@ -47,7 +47,7 @@
             <li class="nav-item d-flex align-items-center">
               <form method="POST" action="{{ route('logout') }}">
                 @csrf
-                <button type="submit" class="btn btn-outline-success btn-sm mb-0 me-3">Logout</button>
+                <button type="submit" class="btn btn-outline-danger btn-sm mb-0 me-3">Logout</button>
               </form>
             </li>
             <!-- Sidebar Toggle for Mobile View -->

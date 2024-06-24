@@ -8,16 +8,15 @@
                 <div class="row">
                     <div class="col-8">
                         <div class="numbers">
-                            <p class="text-sm mb-0 text-capitalize font-weight-bold">Temperature</p>
-                            <h5 class="font-weight-bolder mb-0" id="temperature-value">
+                            <p class="text-sm mb-0 text-capitalize font-weight-bold">Daftar Pegawai</p>
+                            <h5 class="font-weight-bolder mb-0" id="total-employees">
                                 Loading...
-
                             </h5>
                         </div>
                     </div>
                     <div class="col-4 text-end">
-                        <div class="icon icon-shape bg-gradient-success shadow text-center border-radius-md">
-                            <i class="fa-solid fa-temperature-high opacity-5" aria-hidden="true"></i>
+                        <div class="icon icon-shape bg-gradient-danger shadow text-center border-radius-md"> <!-- Ubah dari bg-gradient-success -->
+                            <i class="fa-solid fa-people-group fa-xl opacity-10" aria-hidden="true"></i>
                         </div>
                     </div>
                 </div>
@@ -30,16 +29,15 @@
                 <div class="row">
                     <div class="col-8">
                         <div class="numbers">
-                            <p class="text-sm mb-0 text-capitalize font-weight-bold">Intensity</p>
-                            <h5 class="font-weight-bolder mb-0" id="intensity-value">
+                            <p class="text-sm mb-0 text-capitalize font-weight-bold">Pegawai Aktif</p>
+                            <h5 class="font-weight-bolder mb-0" id="active-employees">
                                 Loading...
-
                             </h5>
                         </div>
                     </div>
                     <div class="col-4 text-end">
-                        <div class="icon icon-shape bg-gradient-success shadow text-center border-radius-md">
-                            <i class="fa-solid fa-lightbulb opacity-10" aria-hidden="true"></i>
+                        <div class="icon icon-shape bg-gradient-danger shadow text-center border-radius-md"> <!-- Ubah dari bg-gradient-success -->
+                            <i class="fa-regular fa-circle-check fa-xl opacity-10" aria-hidden="true"></i>
                         </div>
                     </div>
                 </div>
@@ -52,16 +50,15 @@
                 <div class="row">
                     <div class="col-8">
                         <div class="numbers">
-                            <p class="text-sm mb-0 text-capitalize font-weight-bold">Humidity</p>
-                            <h5 class="font-weight-bolder mb-0" id="humidity-value">
+                            <p class="text-sm mb-0 text-capitalize font-weight-bold">Pegawai Tidak Aktif</p>
+                            <h5 class="font-weight-bolder mb-0" id="deactive-employees">
                                 Loading...
-
                             </h5>
                         </div>
                     </div>
                     <div class="col-4 text-end">
-                        <div class="icon icon-shape bg-gradient-success shadow text-center border-radius-md">
-                            <i class="fa-solid fa-droplet opacity-10" style="color: #ffffff;" aria-hidden="true"></i>
+                        <div class="icon icon-shape bg-gradient-danger shadow text-center border-radius-md"> <!-- Ubah dari bg-gradient-success -->
+                            <i class="fa-solid fa-user-xmark fa-xl opacity-10" style="color: #ffffff;" aria-hidden="true"></i>
                         </div>
                     </div>
                 </div>
@@ -74,16 +71,15 @@
                 <div class="row">
                     <div class="col-8">
                         <div class="numbers">
-                            <p class="text-sm mb-0 text-capitalize font-weight-bold">Soil & Moisture</p>
-                            <h5 class="font-weight-bolder mb-0" id="moisture-value">
+                            <p class="text-sm mb-0 text-capitalize font-weight-bold">Pegawai Keluar</p>
+                            <h5 class="font-weight-bolder mb-0" id="out-employees">
                                 Loading...
-
                             </h5>
                         </div>
                     </div>
                     <div class="col-4 text-end">
-                        <div class="icon icon-shape bg-gradient-success shadow text-center border-radius-md">
-                            <i class="fa-solid fa-arrow-up-from-ground-water fa-rotate-180 opacity-10" aria-hidden="true"></i>
+                        <div class="icon icon-shape bg-gradient-danger shadow text-center border-radius-md"> <!-- Ubah dari bg-gradient-success -->
+                            <i class="fa-solid fa-ban fa-xl opacity-10" aria-hidden="true"></i>
                         </div>
                     </div>
                 </div>
@@ -134,44 +130,31 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const deviceIds = {
-            temperature: 1,
-            humidity: 3,
-            moisture: 4,
-            intensity: 2
-        };
-
-        const elements = {
-            temperature: 'temperature-value',
-            humidity: 'humidity-value',
-            moisture: 'moisture-value',
-            intensity: 'intensity-value'
-        };
-
-        function fetchData(sensorType) {
-            const deviceId = deviceIds[sensorType];
-            const endpoint = `/api/log/${deviceId}`;
-
-            fetch(endpoint)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
+        function fetchEmployeeData() {
+            fetch('/api/employees')
+                .then(response => response.json())
                 .then(data => {
-                    if (data.message) {
-                        throw new Error(data.message);
-                    }
-                    document.getElementById(elements[sensorType]).textContent = data.value;
+                    const employees = data.data;
+                    const totalEmployees = employees.length;
+                    const activeEmployees = employees.filter(emp => emp.Status.toLowerCase() === 'active').length;
+                    const deactiveEmployees = employees.filter(emp => emp.Status.toLowerCase() === 'deactive').length;
+                    const outEmployees = employees.filter(emp => emp.Status.toLowerCase() === 'out').length;
+
+                    document.getElementById('total-employees').textContent = totalEmployees;
+                    document.getElementById('active-employees').textContent = activeEmployees;
+                    document.getElementById('deactive-employees').textContent = deactiveEmployees;
+                    document.getElementById('out-employees').textContent = outEmployees;
                 })
                 .catch(error => {
-                    console.error(`Error fetching data for ${sensorType}:`, error);
-                    document.getElementById(elements[sensorType]).textContent = 'Error';
+                    console.error('Error fetching employee data:', error);
+                    document.getElementById('total-employees').textContent = 'Error';
+                    document.getElementById('active-employees').textContent = 'Error';
+                    document.getElementById('deactive-employees').textContent = 'Error';
+                    document.getElementById('out-employees').textContent = 'Error';
                 });
         }
 
-        ['temperature', 'humidity', 'moisture', 'intensity'].forEach(fetchData);
+        fetchEmployeeData();
     });
 </script>
 @endsection

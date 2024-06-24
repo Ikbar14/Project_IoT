@@ -44,7 +44,7 @@
         }
         .table-title {
             color: #fff;
-            background: #40b2cd;
+            background: #ff0000;
             padding: 16px 25px;
             margin: -20px -25px 10px;
             border-radius: 3px 3px 0 0;

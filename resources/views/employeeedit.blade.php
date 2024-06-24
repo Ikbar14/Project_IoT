@@ -14,14 +14,14 @@
         /* Tambahkan CSS untuk styling tabel */
         .table {
             border: 1px solid #ddd;
-            background-color: #ACE1AF;
+            background-color: #155724;
             /* Warna hijau muda */
         }
 
         .table th {
-            background-color: #ACE1AF;
+            background-color:#FF2400;
             /* Warna hijau muda */
-            color: #343a40;
+            color: #fff ;
             /* Warna teks hitam */
         }
 
@@ -175,117 +175,148 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            fetchEmployees();
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> <!-- Include SweetAlert -->
 
-            // Ambil semua pegawai
-            function fetchEmployees() {
-                axios.get('/api/employees')
-                    .then(response => {
-                        let employees = response.data.data;
-                        let employeeTableBody = $('#employeeTableBody');
-                        employeeTableBody.empty();
-                        employees.forEach(employee => {
-                            employeeTableBody.append(`
-                                <tr>
-                                    <td><a href="#" class="employee-detail" data-id="${employee.id}">${employee.id}</a></td>
-                                    <td>${employee.Number}</td>
-                                    <td>${employee.Name}</td>
-                                    <td>${employee.Email}</td>
-                                    <td>${employee.Address}</td>
-                                    <td>${employee.Phone_Number}</td>
-                                    <td>${employee.Position}</td>
-                                    <td>${employee.Status}</td>
-                                    <td>${employee.City}</td>
-                                    <td>${employee.Country}</td>
-                                    <td>
-                                        <button class="btn btn-warning btn-sm" onclick="editEmployee(${employee.id})">Edit</button>
-                                        <button class="btn btn-danger btn-sm" onclick="deleteEmployee(${employee.id})">Hapus</button>
-                                    </td>
-                                </tr>
-                            `);
-                        });
-                    })
-                    .catch(error => {
-                        console.log(error);
+<script>
+    $(document).ready(function () {
+        fetchEmployees();
+
+        // Ambil semua pegawai
+        function fetchEmployees() {
+            axios.get('/api/employees')
+                .then(response => {
+                    let employees = response.data.data;
+                    let employeeTableBody = $('#employeeTableBody');
+                    employeeTableBody.empty();
+                    employees.forEach(employee => {
+                        employeeTableBody.append(`
+                            <tr>
+                                <td><a href="#" class="employee-detail" data-id="${employee.id}">${employee.id}</a></td>
+                                <td>${employee.Number}</td>
+                                <td>${employee.Name}</td>
+                                <td>${employee.Email}</td>
+                                <td>${employee.Address}</td>
+                                <td>${employee.Phone_Number}</td>
+                                <td>${employee.Position}</td>
+                                <td>${employee.Status}</td>
+                                <td>${employee.City}</td>
+                                <td>${employee.Country}</td>
+                                <td>
+                                    <button class="btn btn-warning btn-sm" onclick="editEmployee(${employee.id})">Edit</button>
+                                    <button class="btn btn-danger btn-sm" onclick="deleteEmployee(${employee.id})">Hapus</button>
+                                </td>
+                            </tr>
+                        `);
                     });
-            }
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+        }
 
-            // Buat pegawai baru
-            $('#createEmployeeForm').submit(function (event) {
-                event.preventDefault();
-                let formData = $(this).serialize();
-                axios.post('/api/employees', formData)
-                    .then(response => {
-                        alert(response.data.message);
-                        fetchEmployees();
-                        $('#createEmployeeForm')[0].reset();
-                    })
-                    .catch(error => {
-                        console.log(error);
+        // Buat pegawai baru
+        $('#createEmployeeForm').submit(function (event) {
+            event.preventDefault();
+            let formData = $(this).serialize();
+            axios.post('/api/employees', formData)
+                .then(response => {
+                    Swal.fire({
+                        title: "Success",
+                        text: response.data.message,
+                        icon: "success",
+                        timer: 2000,
+                        showConfirmButton: false
                     });
-            });
+                    fetchEmployees();
+                    $('#createEmployeeForm')[0].reset();
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+        });
 
-                       // Edit pegawai
-                       window.editEmployee = function (id) {
-                axios.get(`/api/employees/${id}`)
-                    .then(response => {
-                        let employee = response.data.data;
-                        $('#update_id').val(employee.id);
-                        $('#update_number').val(employee.Number);
-                        $('#update_name').val(employee.Name);
-                        $('#update_email').val(employee.Email);
-                        $('#update_address').val(employee.Address);
-                        $('#update_phone').val(employee.Phone_Number);
-                        $('#update_position').val(employee.Position);
-                        $('#update_status').val(employee.Status);
-                        $('#update_city').val(employee.City);
-                        $('#update_country').val(employee.Country);
-                    })
-                    .catch(error => {
-                        console.log(error);
+        // Edit pegawai
+        window.editEmployee = function (id) {
+            axios.get(`/api/employees/${id}`)
+                .then(response => {
+                    let employee = response.data.data;
+                    $('#update_id').val(employee.id);
+                    $('#update_number').val(employee.Number);
+                    $('#update_name').val(employee.Name);
+                    $('#update_email').val(employee.Email);
+                    $('#update_address').val(employee.Address);
+                    $('#update_phone').val(employee.Phone_Number);
+                    $('#update_position').val(employee.Position);
+                    $('#update_status').val(employee.Status);
+                    $('#update_city').val(employee.City);
+                    $('#update_country').val(employee.Country);
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+        };
+
+        // Perbarui pegawai
+        $('#updateEmployeeForm').submit(function (event) {
+            event.preventDefault();
+            let id = $('#update_id').val();
+            let formData = $(this).serialize();
+            axios.put(`/api/employees/${id}`, formData)
+                .then(response => {
+                    Swal.fire({
+                        title: "Success",
+                        text: response.data.message,
+                        icon: "success",
+                        timer: 2000,
+                        showConfirmButton: false
                     });
-            };
+                    fetchEmployees();
+                    $('#updateEmployeeForm')[0].reset();
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+        });
 
-            // Perbarui pegawai
-            $('#updateEmployeeForm').submit(function (event) {
-                event.preventDefault();
-                let id = $('#update_id').val();
-                let formData = $(this).serialize();
-                axios.put(`/api/employees/${id}`, formData)
-                    .then(response => {
-                        alert(response.data.message);
-                        fetchEmployees();
-                        $('#updateEmployeeForm')[0].reset();
-                    })
-                    .catch(error => {
-                        console.log(error);
-                    });
-            });
-
-            // Hapus pegawai
-            window.deleteEmployee = function (id) {
-                if (confirm('Apakah Anda yakin ingin menghapus pegawai ini?')) {
+        // Hapus pegawai
+        window.deleteEmployee = function (id) {
+            Swal.fire({
+                title: "Are you sure?",
+                text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, delete it!"
+            }).then((result) => {
+                if (result.isConfirmed) {
                     axios.delete(`/api/employees/${id}`)
                         .then(response => {
-                            alert(response.data.message);
+                            Swal.fire({
+                                title: "Deleted!",
+                                text: response.data.message,
+                                icon: "success",
+                                timer: 2000,
+                                showConfirmButton: false
+                            });
                             fetchEmployees();
                         })
                         .catch(error => {
                             console.log(error);
                         });
                 }
-            };
-
-            // Fungsi untuk menampilkan detail pegawai saat ID pegawai diklik
-            $(document).on('click', '.employee-detail', function (e) {
-                e.preventDefault();
-                var employeeId = $(this).data('id');
-                // Lakukan apa yang diperlukan untuk menampilkan detail pegawai, misalnya redirect atau lainnya
             });
+        };
+
+        // Fungsi untuk menampilkan detail pegawai saat ID pegawai diklik
+        $(document).on('click', '.employee-detail', function (e) {
+            e.preventDefault();
+            var employeeId = $(this).data('id');
+            // Lakukan apa yang diperlukan untuk menampilkan detail pegawai, misalnya redirect atau lainnya
         });
-    </script>
+    });
+</script>
+
 
 </body>
 
